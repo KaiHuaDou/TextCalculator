@@ -1,0 +1,15 @@
+﻿<Window x:Class="TextCalculator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TextCalculator"
+        Title="文本计算器"
+        Width="525"
+        Height="350">
+    <DockPanel>
+        <TextBox x:Name="mainBox"
+                 Margin="5,0,5,5"
+                 BorderThickness="0"
+                 FontFamily="Consolas" FontSize="22"
+                 AcceptsReturn="True" PreviewKeyDown="MainBoxKeyDown" ScrollViewer.CanContentScroll="True" />
+    </DockPanel>
+</Window>
