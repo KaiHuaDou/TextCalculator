@@ -16,33 +16,28 @@ public static class Calculator
 
     public static double Calculate(string expr)
     {
-        if (string.IsNullOrWhiteSpace(expr))
-            return double.NaN;
         Expression e = new(expr.ToUpperInvariant( ));
         e.EvaluateFunction += (string name, FunctionArgs args) =>
         {
-            if (double.TryParse(args.Parameters[0].Evaluate( ).ToString( ), out double result) != true)
-            {
-                args.Result = double.NaN;
-                return;
-            }
             List<double> parameters = [];
             foreach (Expression parameter in args.Parameters)
             {
-                parameters.Add(double.Parse(parameter.Evaluate( ).ToString( )));
+                try
+                {
+                    parameters.Add(double.Parse(parameter.Evaluate( ).ToString( )));
+                }
+                catch
+                {
+                    args.Result = double.NaN;
+                    return;
+                }
             }
             args.Result = ParseFunction(name, parameters);
         };
         e.EvaluateParameter += (string name, ParameterArgs args) => args.Result = ParseParameter(name);
-        try
-        {
-            string evaluated = e.Evaluate( ).ToString( );
-            return double.TryParse(evaluated, out double result) ? result : double.NaN;
-        }
-        catch
-        {
-            return double.NaN;
-        }
+        string evaluated = "NaN";
+        try { evaluated = e.Evaluate( ).ToString( ); } catch { }
+        return double.TryParse(evaluated, out double result) ? result : double.NaN;
     }
 
     public static double ParseFunction(string name, List<double> args)
@@ -51,24 +46,24 @@ public static class Calculator
         {
             // 单参数
             "ABS" => Abs(args[0]),
-            "ACOS" => Acos(args[0]),
-            "ACOSH" => Acosh(args[0]),
-            "ASIN" => Asin(args[0]),
-            "ASINH" => Asinh(args[0]),
-            "ATAN" => Atan(args[0]),
+            "ACOS" or "ARCCOS" => Acos(args[0]),
+            "ACOSH" or "ARCCOSH" => Acosh(args[0]),
+            "ASIN" or "ARCSIN" => Asin(args[0]),
+            "ASINH" or "ARCSINH" => Asinh(args[0]),
+            "ATAN" or "ARCTAN" => Atan(args[0]),
             "CBRT" => Cbrt(args[0]),
             "CEIL" or "CEILING" => Ceiling(args[0]),
             "COS" => Cos(args[0]),
             "COT" => 1.0 / Tan(args[0]),
             "CSC" => 1.0 / Cos(args[0]),
-            "DEG" => Deg(args[0]),
+            "DEG" or "DEGREE" => Deg(args[0]),
             "EXP" => Exp(args[0]),
             "FLOOR" => Floor(args[0]),
             "ILOGB" => ILogB(args[0]),
-            "LOG" => Log(args[0]),
-            "LOG10" => Log10(args[0]),
-            "LOG2" => Log2(args[0]),
-            "RAD" => Rad(args[0]),
+            "LOGE" or "LN" => Log(args[0]),
+            "LOG10" or "LG" => Log10(args[0]),
+            "LOG2" or "L2" => Log2(args[0]),
+            "RAD" or "RADIAN" => Rad(args[0]),
             "RND" or "ROUND" => Round(args[0]),
             "SEC" => 1.0 / Sin(args[0]),
             "SGN" or "SIGN" => Sign(args[0]),
@@ -79,6 +74,7 @@ public static class Calculator
 
             // 双参数
             "ATAN2" => Atan2(args[0], args[1]),
+            "LOG" => Log(args[0], args[1]),
             "POW" => Pow(args[0], args[1]),
             "SCALEB" => ScaleB(args[0], (int) args[1]),
 

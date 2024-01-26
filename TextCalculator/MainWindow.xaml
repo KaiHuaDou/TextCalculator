@@ -10,6 +10,7 @@
                  Margin="5,0,5,5"
                  BorderThickness="0"
                  FontFamily="Consolas" FontSize="22"
-                 AcceptsReturn="True" PreviewKeyDown="MainBoxKeyDown" ScrollViewer.CanContentScroll="True" />
+                 AcceptsReturn="True" PreviewKeyDown="MainBoxKeyDown" ScrollViewer.CanContentScroll="True"
+                 TextWrapping="Wrap" />
     </DockPanel>
 </Window>
