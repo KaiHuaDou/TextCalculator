@@ -14,30 +14,38 @@ public partial class MainWindow : Window
     {
         if (e.Key is Key.ImeProcessed or not Key.Return)
             return;
+        e.Handled = true;
 
-        int lineIndex = mainBox.GetLineIndexFromCharacterIndex(mainBox.SelectionStart);
-        string raw = mainBox.GetLineText(lineIndex);
+        string[] lines = mainBox.Text.Split("\r\n");
+        int lineIndex = 0, charIndex = 0;
+        foreach (string line in lines)
+        {
+            charIndex += line.Length + 2;
+            if (charIndex > mainBox.SelectionStart)
+                break;
+            lineIndex++;
+        }
+        string raw = lines[lineIndex];
         raw = Calculator.ExprFilter(raw);
         if (string.IsNullOrWhiteSpace(raw))
         {
+            mainBox.Text = mainBox.Text.Insert(charIndex - 2, "\r\n");
+            mainBox.SelectionStart = charIndex - 1;
             return;
         }
         else if (raw is "cls" or "clear")
         {
             mainBox.Text = "";
-            e.Handled = true;
             return;
         }
         else if (raw == "exit")
         {
             Application.Current.Shutdown( );
         }
-
-        string result = $"={Calculator.Calculate(raw)}";
-        do { mainBox.SelectionStart++; }
-        while (mainBox.SelectionStart < mainBox.Text.Length && mainBox.Text[mainBox.SelectionStart] is not '\n' or '\r');
-        int index = mainBox.SelectionStart;
-        mainBox.Text = mainBox.Text.Insert(mainBox.SelectionStart, result);
-        mainBox.SelectionStart = index + result.Length;
+        string result = $"={Calculator.Calculate(raw)}\r\n";
+        // 此处为 Windows 系统使用 CRLF 换行符，导致在换行处理时有 2 字符的偏差。
+        bool flag = lineIndex + 1 >= lines.Length;
+        mainBox.Text = mainBox.Text.Insert(charIndex - 2, result);
+        mainBox.SelectionStart = charIndex + (flag ? result.Length : result.Length - 2);
     }
 }
