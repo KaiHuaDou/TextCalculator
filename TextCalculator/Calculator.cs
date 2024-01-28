@@ -91,7 +91,7 @@ public static class Calculator
         return name switch
         {
             "E" => E,
-            "PI" => PI,
+            "PI" or "π" => PI,
             "TAU" => Tau,
             _ => double.NaN
         };
