@@ -6,8 +6,24 @@
         Width="525"
         Height="350">
     <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Margin="10">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                    <Setter Property="Padding" Value="20,3" />
+                </Style>
+                <Style TargetType="CheckBox">
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                </Style>
+            </StackPanel.Resources>
+            <Button Click="ClearBox" Content="清空" />
+            <Button Click="CopyAction" Content="复制算式" />
+            <Button Click="CopyResult" Content="复制结果" />
+            <CheckBox x:Name="AutoCopyResult" Content="自动复制结果" />
+            <CheckBox Click="WindowTopmost" Content="置顶" />
+        </StackPanel>
         <TextBox x:Name="mainBox"
-                 Margin="5,0,5,5"
+                 Margin="10,0,0,10"
                  BorderThickness="0"
                  FontFamily="Consolas" FontSize="22"
                  AcceptsReturn="True" PreviewKeyDown="MainBoxKeyDown" ScrollViewer.CanContentScroll="True"

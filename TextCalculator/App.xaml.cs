@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using SingleInstanceCore;
+using static TextCalculator.NativeMethods;
 
 namespace TextCalculator;
 public partial class App : Application, ISingleInstance
@@ -17,10 +18,7 @@ public partial class App : Application, ISingleInstance
     }
 
     public void OnInstanceInvoked(string[] args)
-    {
-        Current.MainWindow.Topmost = !Current.MainWindow.Topmost;
-        Current.MainWindow.Topmost = !Current.MainWindow.Topmost;
-    }
+        => SwitchToThisWindow(GetWindowHwndSource(MainWindow), true);
 
     private void AppStartup(object sender, StartupEventArgs e)
     {
@@ -29,7 +27,5 @@ public partial class App : Application, ISingleInstance
     }
 
     private void AppExit(object sender, ExitEventArgs e)
-    {
-        SingleInstance.Cleanup( );
-    }
+        => SingleInstance.Cleanup( );
 }

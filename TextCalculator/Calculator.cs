@@ -14,6 +14,9 @@ public static class Calculator
         return Sqrt(p * (p - a) * (p - b) * (p - c));
     }
 
+    public static bool IsTriangle(double a, double b, double c)
+        => (a + b > c) && (a + c > b) && (b + c > a);
+
     public static double Calculate(string expr)
     {
         Expression e = new(expr.ToUpperInvariant( ));
@@ -40,9 +43,9 @@ public static class Calculator
         return double.TryParse(evaluated, out double result) ? result : double.NaN;
     }
 
-    public static double ParseFunction(string name, List<double> args)
+    public static string ParseFunction(string name, IList<double> args)
     {
-        return name switch
+        return (name switch
         {
             // 单参数
             "ABS" => Abs(args[0]),
@@ -80,21 +83,22 @@ public static class Calculator
 
             // 多参数
             "FUSEMULADD" or "FUSEDMULTIPLYADD" => FusedMultiplyAdd(args[0], args[1], args[2]),
+            "TRI" or "ISTRIANGLE" => IsTriangle(args[0], args[1], args[2]) ? 1 : 0,
             "HERON" => Heron(args[0], args[1], args[2]),
 
             _ => double.NaN,
-        };
+        }).ToString( );
     }
 
-    public static double ParseParameter(string name)
+    public static string ParseParameter(string name)
     {
-        return name switch
+        return (name switch
         {
             "E" => E,
             "PI" or "π" => PI,
             "TAU" => Tau,
             _ => double.NaN
-        };
+        }).ToString( );
     }
 
     public static string ExprFilter(string expr)
@@ -102,12 +106,11 @@ public static class Calculator
         expr = expr.Trim( );
         (string, string)[] filters =
         [
-            ("“","\""), ("”","\""), ("（","("), ("）",")"), ("、", "/")
+            ("“","\""), ("”","\""), ("（","("), ("）",")"), ("、", "/"),
+            ("×", "*"), ("÷", "/")
         ];
         foreach ((string, string) filter in filters)
-        {
             expr = expr.Replace(filter.Item1, filter.Item2);
-        }
         return expr;
     }
 }

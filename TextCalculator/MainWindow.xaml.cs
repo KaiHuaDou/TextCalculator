@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 
 namespace TextCalculator;
 
@@ -10,14 +9,19 @@ public partial class MainWindow : Window
         InitializeComponent( );
     }
 
-    private void MainBoxKeyDown(object o, KeyEventArgs e)
+    public void SetInputNow(char c)
     {
-        if (e.Key is Key.ImeProcessed or not Key.Return)
-            return;
-        e.Handled = true;
+        int selectIndex = mainBox.SelectionStart;
+        char[] textArray = mainBox.Text.ToCharArray( );
+        textArray[mainBox.SelectionStart - 1] = c;
+        mainBox.Text = new string(textArray);
+        mainBox.SelectionStart = selectIndex;
+    }
 
-        string[] lines = mainBox.Text.Split("\r\n");
-        int lineIndex = 0, charIndex = 0;
+    private (int, int, string) GetCharIndex(string text)
+    {
+        string[] lines = text.Split("\r\n");
+        int charIndex = 0, lineIndex = 0;
         foreach (string line in lines)
         {
             charIndex += line.Length + 2;
@@ -25,27 +29,9 @@ public partial class MainWindow : Window
                 break;
             lineIndex++;
         }
-        string raw = lines[lineIndex];
-        raw = Calculator.ExprFilter(raw);
-        if (string.IsNullOrWhiteSpace(raw))
-        {
-            mainBox.Text = mainBox.Text.Insert(charIndex - 2, "\r\n");
-            mainBox.SelectionStart = charIndex - 1;
-            return;
-        }
-        else if (raw is "cls" or "clear")
-        {
-            mainBox.Text = "";
-            return;
-        }
-        else if (raw == "exit")
-        {
-            Application.Current.Shutdown( );
-        }
-        string result = $"={Calculator.Calculate(raw)}\r\n";
-        // 此处为 Windows 系统使用 CRLF 换行符，导致在换行处理时有 2 字符的偏差。
-        bool flag = lineIndex + 1 >= lines.Length;
-        mainBox.Text = mainBox.Text.Insert(charIndex - 2, result);
-        mainBox.SelectionStart = charIndex + (flag ? result.Length : result.Length - 2);
+        return (lineIndex, charIndex, lines[lineIndex]);
     }
+
+    private void WindowTopmost(object sender, RoutedEventArgs e)
+        => Topmost = !Topmost;
 }
