@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using NCalc;
 using static System.Math;
 
@@ -12,6 +13,38 @@ public static class Calculator
     {
         double p = 0.5 * (a + b + c);
         return Sqrt(p * (p - a) * (p - b) * (p - c));
+    }
+
+    public static double LinearEquation(double a, double b) => -b / a;
+
+    public static double QuadraticEquation(bool isSolve, double a, double b, double c)
+    {
+        double delta = b * b - 4 * a * c;
+        return isSolve
+            ? delta switch
+            {
+                > 0 => (-b + Sqrt(delta)) / (2 * a),
+                0 => -b / (2 * a),
+                < 0 => double.NaN,
+                _ => double.NaN,
+            }
+            : delta;
+    }
+
+    public static double CubicEquation(double a, double b, double c, double d)
+    {
+        double u = (9 * a * b * c - 27 * a * a * d - 2 * b * b * b) / (54 * a * a * a);
+        double v = Sqrt(3 * (4 * a * c * c * c - b * b * c * c - 18 * a * b * c * d + 27 * a * a * d * d + 4 * b * b * b * d)) / (18 * a * a);
+        double m = 0, n = 0;
+        if (Abs(u + v) >= Abs(u - v))
+            m = Pow(u + v, 1.0 / 3);
+        else if (Abs(u + v) < Abs(u - v))
+            m = Pow(u - v, 1.0 / 3);
+        if (m != 0)
+            n = (b * b - 3 * a * c) / (9 * a * a * m);
+        else if (m == 0)
+            n = 0;
+        return m + n - b / (3 * a);
     }
 
     public static bool IsTriangle(double a, double b, double c)
@@ -78,6 +111,7 @@ public static class Calculator
             // 双参数
             "ATAN2" => Atan2(args[0], args[1]),
             "LOG" => Log(args[0], args[1]),
+            "LINEAR" or "LINEAREQUATION" => LinearEquation(args[0], args[1]),
             "POW" => Pow(args[0], args[1]),
             "SCALEB" => ScaleB(args[0], (int) args[1]),
 
@@ -85,6 +119,9 @@ public static class Calculator
             "FUSEMULADD" or "FUSEDMULTIPLYADD" => FusedMultiplyAdd(args[0], args[1], args[2]),
             "TRI" or "ISTRIANGLE" => IsTriangle(args[0], args[1], args[2]) ? 1 : 0,
             "HERON" => Heron(args[0], args[1], args[2]),
+            "QUADRATIC" or "QUADRATICEQUATION" => QuadraticEquation(true, args[0], args[1], args[2]),
+            "QUADRADELTA" or "QUADRATICDELTA" => QuadraticEquation(false, args[0], args[1], args[2]),
+            "CUBIC" or "CUBICEQUATION" => CubicEquation(args[0], args[1], args[2], args[3]),
 
             _ => double.NaN,
         }).ToString( );
@@ -107,7 +144,7 @@ public static class Calculator
         (string, string)[] filters =
         [
             ("“","\""), ("”","\""), ("（","("), ("）",")"), ("、", "/"),
-            ("×", "*"), ("÷", "/")
+            ("×", "*"), ("÷", "/"), ("=", "")
         ];
         foreach ((string, string) filter in filters)
             expr = expr.Replace(filter.Item1, filter.Item2);

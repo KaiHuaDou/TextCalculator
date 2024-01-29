@@ -4,6 +4,8 @@
         <OutputType>WinExe</OutputType>
         <UseWPF>true</UseWPF>
         <LangVersion>12.0</LangVersion>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <PublishSingleFile>true</PublishSingleFile>
     </PropertyGroup>
     <PropertyGroup>
         <StartupObject>TextCalculator.App</StartupObject>
