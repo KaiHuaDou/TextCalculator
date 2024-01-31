@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
+using TextCalculator.Properties;
 
 namespace TextCalculator;
 public partial class MainWindow
@@ -25,6 +27,7 @@ public partial class MainWindow
         }
 
         double answer = Calculator.Calculate(parsedRaw);
+        answer = Math.Round(answer, Settings.Default.RoundLength, MidpointRounding.AwayFromZero);
         if (AutoCopyResult.IsChecked == true)
             Clipboard.SetText(answer.ToString( ));
         string result = !double.IsNaN(answer)
@@ -36,31 +39,23 @@ public partial class MainWindow
         mainBox.SelectionStart = charIndex + (flag ? result.Length : result.Length - 2);
     }
 
-    //private void MainBoxKeyUp(object o, KeyEventArgs e)
-    //{
-    //    if (mainBox.Text.Length == 0)
-    //        return;
-    //    switch (mainBox.Text[mainBox.SelectionStart - 1])
-    //    {
-    //        case '*': SetInputNow('×'); break;
-    //        case '/': SetInputNow('÷'); break;
-    //    }
-    //}
-
     private void ClearBox(object o, RoutedEventArgs e)
         => mainBox.Clear( );
+
+    private void CopyLine(object o, RoutedEventArgs e)
+        => Clipboard.SetText(GetCharIndex(mainBox.Text).Item3);
 
     private void CopyAction(object o, RoutedEventArgs e)
     {
         string raw = GetCharIndex(mainBox.Text).Item3;
         int equalIndex = raw.LastIndexOf('=');
-        Clipboard.SetText(raw[..equalIndex]);
+        Clipboard.SetText(equalIndex == -1 ? raw : raw[..equalIndex]);
     }
 
     private void CopyResult(object o, RoutedEventArgs e)
     {
         string raw = GetCharIndex(mainBox.Text).Item3;
         int equalIndex = raw.LastIndexOf('=');
-        Clipboard.SetText(raw[(equalIndex + 1)..]);
+        Clipboard.SetText(equalIndex == -1 ? raw : raw[(equalIndex + 1)..]);
     }
 }

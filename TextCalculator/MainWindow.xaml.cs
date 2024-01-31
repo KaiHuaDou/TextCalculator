@@ -1,4 +1,10 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Drawing.Text;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using TextCalculator.Properties;
 
 namespace TextCalculator;
 
@@ -7,6 +13,24 @@ public partial class MainWindow : Window
     public MainWindow( )
     {
         InitializeComponent( );
+        FontFamilyBox.ItemsSource =
+            new InstalledFontCollection( ).Families.Select(o => o.Name).OrderBy(o => o);
+        try
+        {
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(Settings.Default.FontFamily);
+            FontSizeBox.Text = Settings.Default.FontSize.ToString( );
+            mainBox.FontWeight = (FontWeight) new FontWeightConverter( ).ConvertBack(Settings.Default.Bold, null, null, null);
+            TopmostBox.IsChecked = Settings.Default.Topmost;
+            AutoCopyResult.IsChecked = Settings.Default.AutoCopy;
+            RoundLengthBox.Text = Settings.Default.RoundLength.ToString( );
+        }
+        catch
+        {
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf("Consolas");
+            FontSizeBox.Text = mainBox.FontSize.ToString( );
+            Settings.Default.RoundLength = 3;
+            RoundLengthBox.Text = "3";
+        }
     }
 
     public void SetInputNow(char c)
@@ -32,6 +56,25 @@ public partial class MainWindow : Window
         return (lineIndex, charIndex, lines[lineIndex]);
     }
 
-    private void WindowTopmost(object sender, RoutedEventArgs e)
-        => Topmost = !Topmost;
+    private void WindowTopmost(object o, RoutedEventArgs e)
+        => Topmost = (bool) TopmostBox.IsChecked;
+
+    private void FontFamilySelectionChanged(object o, SelectionChangedEventArgs e)
+        => mainBox.FontFamily = new FontFamily(FontFamilyBox.SelectedValue.ToString( ));
+
+    private void FontSizeTextChanged(object o, TextChangedEventArgs e)
+        => mainBox.FontSize = double.TryParse(FontSizeBox.Text, out double result) ? result : 22;
+
+    private void RoundLengthChanged(object o, TextChangedEventArgs e)
+        => Settings.Default.RoundLength = int.TryParse(RoundLengthBox.Text, out int result) ? result : 3;
+
+    private void WindowClosing(object o, CancelEventArgs e)
+    {
+        Settings.Default.FontFamily = mainBox.FontFamily.Source;
+        Settings.Default.FontSize = mainBox.FontSize;
+        Settings.Default.Bold = (bool) BoldBox.IsChecked;
+        Settings.Default.Topmost = Topmost;
+        Settings.Default.AutoCopy = (bool) AutoCopyResult.IsChecked;
+        Settings.Default.Save( );
+    }
 }

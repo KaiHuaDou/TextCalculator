@@ -5,5 +5,11 @@
              Exit="AppExit"
              Startup="AppStartup"
              StartupUri="MainWindow.xaml">
-    <Application.Resources />
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Aero,Version=6.0.2.0,Culture=neutral,PublicKeyToken=31bf3856ad364e35;component/themes/Aero.NormalColor.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

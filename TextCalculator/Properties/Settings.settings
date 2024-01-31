@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TextCalculator.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FontFamily" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FontSize" Type="System.Double" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Bold" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Topmost" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AutoCopy" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RoundLength" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

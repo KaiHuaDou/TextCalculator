@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using NCalc;
 using static System.Math;
@@ -100,7 +101,7 @@ public static class Calculator
             "LOG10" or "LG" => Log10(args[0]),
             "LOG2" or "L2" => Log2(args[0]),
             "RAD" or "RADIAN" => Rad(args[0]),
-            "RND" or "ROUND" => Round(args[0]),
+            "RND" or "ROUND" => Round(args[0], 0, MidpointRounding.AwayFromZero),
             "SEC" => 1.0 / Sin(args[0]),
             "SGN" or "SIGN" => Sign(args[0]),
             "SIN" => Sin(args[0]),
