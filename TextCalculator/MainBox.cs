@@ -30,8 +30,10 @@ public partial class MainWindow
         answer = Math.Round(answer, Settings.Default.RoundLength, MidpointRounding.AwayFromZero);
         if (AutoCopyResult.IsChecked == true)
             Clipboard.SetText(answer.ToString( ));
+        string equalMark = raw[^1] == '=' ? "" : "=";
+        string duplicate = DuplicateResult.IsChecked == true ? answer.ToString( ) : "";
         string result = !double.IsNaN(answer)
-            ? $"{(raw[^1] == '=' ? "" : "=")}{answer}\r\n"
+            ? $"{equalMark}{answer}\r\n{duplicate}"
             : "\r\n";
         // 此处为 Windows 系统使用 CRLF 换行符，导致在换行处理时有 2 字符的偏差。
         bool flag = lineIndex + 1 >= mainBox.Text.Split("\r\n").Length;

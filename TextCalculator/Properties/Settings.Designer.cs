@@ -89,5 +89,27 @@ namespace TextCalculator.Properties {
                 this["RoundLength"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public bool Duplicate {
+            get {
+                return ((bool)(this["Duplicate"]));
+            }
+            set {
+                this["Duplicate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public bool EyeProtect {
+            get {
+                return ((bool)(this["EyeProtect"]));
+            }
+            set {
+                this["EyeProtect"] = value;
+            }
+        }
     }
 }

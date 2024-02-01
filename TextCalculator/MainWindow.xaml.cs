@@ -17,16 +17,24 @@ public partial class MainWindow : Window
             new InstalledFontCollection( ).Families.Select(o => o.Name).OrderBy(o => o);
         try
         {
-            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(Settings.Default.FontFamily);
-            FontSizeBox.Text = Settings.Default.FontSize.ToString( );
-            mainBox.FontWeight = (FontWeight) new FontWeightConverter( ).ConvertBack(Settings.Default.Bold, null, null, null);
             TopmostBox.IsChecked = Settings.Default.Topmost;
             AutoCopyResult.IsChecked = Settings.Default.AutoCopy;
+            DuplicateResult.IsChecked = Settings.Default.Duplicate;
             RoundLengthBox.Text = Settings.Default.RoundLength.ToString( );
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(Settings.Default.FontFamily);
+            FontSizeBox.Text = Settings.Default.FontSize.ToString( );
+            //BoldBox.IsChecked = Settings.Default.Bold;
+            mainBox.FontWeight = (FontWeight) new FontWeightConverter( ).ConvertBack(Settings.Default.Bold, null, null, null);
+            EyeProtectBox.IsChecked = Settings.Default.EyeProtect;
+
+            WindowTopmost(null, null);
+            FontFamilySelectionChanged(null, null);
+            FontSizeTextChanged(null, null);
+            EyeProtectChecked(null, null);
         }
         catch
         {
-            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf("Consolas");
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(mainBox.FontFamily.Source);
             FontSizeBox.Text = mainBox.FontSize.ToString( );
             Settings.Default.RoundLength = 3;
             RoundLengthBox.Text = "3";
@@ -68,13 +76,23 @@ public partial class MainWindow : Window
     private void RoundLengthChanged(object o, TextChangedEventArgs e)
         => Settings.Default.RoundLength = int.TryParse(RoundLengthBox.Text, out int result) ? result : 3;
 
+    private void EyeProtectChecked(object o, RoutedEventArgs e)
+    {
+        SolidColorBrush white = new(Color.FromArgb(0xFF, 0xE6, 0xE6, 0xE6));
+        SolidColorBrush green = new(Color.FromArgb(0xFF, 0xCF, 0xE8, 0xCC));
+        mainBox.Background = EyeProtectBox.IsChecked == true ? green : white;
+        //mainBox.Foreground = EyeProtectBox.IsChecked == true ? white : black;
+    }
+
     private void WindowClosing(object o, CancelEventArgs e)
     {
+        Settings.Default.Topmost = Topmost;
+        Settings.Default.AutoCopy = (bool) AutoCopyResult.IsChecked;
+        Settings.Default.Duplicate = (bool) DuplicateResult.IsChecked;
         Settings.Default.FontFamily = mainBox.FontFamily.Source;
         Settings.Default.FontSize = mainBox.FontSize;
         Settings.Default.Bold = (bool) BoldBox.IsChecked;
-        Settings.Default.Topmost = Topmost;
-        Settings.Default.AutoCopy = (bool) AutoCopyResult.IsChecked;
+        Settings.Default.EyeProtect = (bool) EyeProtectBox.IsChecked;
         Settings.Default.Save( );
     }
 }

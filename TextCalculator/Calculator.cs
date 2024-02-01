@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using NCalc;
 using static System.Math;
 
@@ -142,13 +141,21 @@ public static class Calculator
     public static string ExprFilter(string expr)
     {
         expr = expr.Trim( );
-        (string, string)[] filters =
-        [
-            ("“","\""), ("”","\""), ("（","("), ("）",")"), ("、", "/"),
-            ("×", "*"), ("÷", "/"), ("=", "")
-        ];
-        foreach ((string, string) filter in filters)
-            expr = expr.Replace(filter.Item1, filter.Item2);
+        Dictionary<string, string> filters = new( )
+        {
+            // 中文标点
+            {"“", ""}, {"”", ""}, {"‘", ""}, {"’", ""},
+            {"（", "("}, {"）", ")"}, {"、", "/"}, {"，", ","},
+            {"……", "^"}, {"——", "-"}, {"《", "<"}, {"》", ">"},
+            // 特殊符号
+            {"×", "*"}, {"÷", "/"}, {"=", ""}, {"'", ""},
+            // 多级括号
+            {"{", "("}, {"}", ")"}, {"[", "("}, {"]", ")"},
+            // 数学运算
+            {"%", "*0.01"}
+        };
+        foreach (KeyValuePair<string, string> filter in filters)
+            expr = expr.Replace(filter.Key, filter.Value);
         return expr;
     }
 }
