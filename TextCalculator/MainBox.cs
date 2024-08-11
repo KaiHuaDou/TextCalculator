@@ -23,7 +23,7 @@ public partial class MainWindow
         switch (parsedRaw)
         {
             case "cls" or "clear": mainBox.Text = ""; return;
-            case "exit": Application.Current.Shutdown( ); return;
+            case "exit": Close( ); return;
         }
 
         double answer = Calculator.Calculate(parsedRaw);

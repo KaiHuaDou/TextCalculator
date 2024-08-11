@@ -47,11 +47,26 @@ public static class Calculator
         return m + n - b / (3 * a);
     }
 
+    public static double FourEquation(double a, double b, double c, double d, double e)
+    {
+        double A = 8 * a * c - 3 * b * b;
+        double C = b * b * b - 4 * a * b * c + 8 * a * a * d;
+        double B = (b * b - 4 * a * c) * (b * b - 4 * a * c) + 2 * b * C - 64 * a * a * a * e;
+        double q = (2 * A * A * A - 9 * A * B + 27 * C * C) / 2;
+        double p = 3 * B - A * A;
+        double delta = q * q + p * p * p;
+        double s1 = Pow(-q + Sqrt(delta), 1 / 3);
+        double s2 = Pow(-q - Sqrt(delta), 1 / 3);
+        return s1 + s2;
+    }
+
     public static bool IsTriangle(double a, double b, double c)
         => (a + b > c) && (a + c > b) && (b + c > a);
 
     public static double Calculate(string expr)
     {
+        if (double.TryParse(expr, out _))
+            return double.NaN;
         Expression e = new(expr.ToUpperInvariant( ));
         e.EvaluateFunction += (string name, FunctionArgs args) =>
         {
@@ -147,8 +162,14 @@ public static class Calculator
             {"“", ""}, {"”", ""}, {"‘", ""}, {"’", ""},
             {"（", "("}, {"）", ")"}, {"、", "/"}, {"，", ","},
             {"……", "^"}, {"——", "-"}, {"《", "<"}, {"》", ">"},
+            // 汉字运算
+            {"一", "1"}, {"二", "2"}, {"三", "3"}, {"四", "4"},
+            {"五", "5"}, {"六", "6"}, {"七", "7"}, {"八", "8"},
+            {"九", "9"}, {"十", "10"}, {"百", "100"},
+            {"千", "1000"}, {"万", "10000"}, {"亿", "100000000"},
+            {"加","+"}, {"减","-"}, {"乘","*"}, {"除","/"}, {"百分之", "0.01*"},
             // 特殊符号
-            {"×", "*"}, {"÷", "/"}, {"=", ""}, {"'", ""},
+            {"×", "*"}, {"÷", "/"}, {"'", ""},
             // 多级括号
             {"{", "("}, {"}", ")"}, {"[", "("}, {"]", ")"},
             // 数学运算
@@ -156,6 +177,8 @@ public static class Calculator
         };
         foreach (KeyValuePair<string, string> filter in filters)
             expr = expr.Replace(filter.Key, filter.Value);
+        while (expr.EndsWith('='))
+            expr = expr[..^1];
         return expr;
     }
 }

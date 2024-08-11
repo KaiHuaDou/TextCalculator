@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <OutputType>WinExe</OutputType>
         <UseWPF>true</UseWPF>
-        <LangVersion>12.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <PublishReadyToRun>true</PublishReadyToRun>
-        <PublishSingleFile>true</PublishSingleFile>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <PropertyGroup>
         <StartupObject>TextCalculator.App</StartupObject>
@@ -16,12 +16,8 @@
     </PropertyGroup>
     <ItemGroup>
         <Content Include="TextCalculator.ico" />
-        <PackageReference Include="ncalc" Version="1.3.8" />
+        <PackageReference Include="CoreCLR-NCalc" Version="3.1.253" />
         <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
-        <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
-        <Reference Include="PresentationFramework.Aero">
-            <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.25\PresentationFramework.Aero.dll</HintPath>
-        </Reference>
         <Compile Update="Properties\Settings.Designer.cs">
             <DesignTimeSharedInput>True</DesignTimeSharedInput>
             <AutoGen>True</AutoGen>

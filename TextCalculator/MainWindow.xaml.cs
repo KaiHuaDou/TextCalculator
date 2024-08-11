@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Drawing.Text;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,24 +12,29 @@ public partial class MainWindow : Window
     public MainWindow( )
     {
         InitializeComponent( );
-        FontFamilyBox.ItemsSource =
-            new InstalledFontCollection( ).Families.Select(o => o.Name).OrderBy(o => o);
+    }
+
+    private void WindowLoaded(object o, RoutedEventArgs e)
+        => Dispatcher.InvokeAsync(InitGUI);
+
+    private void InitGUI( )
+    {
+        FontFamilyBox.ItemsSource = Fonts.SystemFontFamilies.Select(o => o.Source).OrderBy(o => o);
         try
         {
             TopmostBox.IsChecked = Settings.Default.Topmost;
+            WindowTopmost(null, null);
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(Settings.Default.FontFamily);
+            FontFamilySelectionChanged(null, null);
+            FontSizeBox.Text = Settings.Default.FontSize.ToString( );
+            FontSizeTextChanged(null, null);
+            EyeProtectBox.IsChecked = Settings.Default.EyeProtect;
+            EyeProtectChecked(null, null);
+
+            mainBox.FontWeight = (FontWeight) new FontWeightConverter( ).ConvertBack(Settings.Default.Bold, null, null, null);
             AutoCopyResult.IsChecked = Settings.Default.AutoCopy;
             DuplicateResult.IsChecked = Settings.Default.Duplicate;
             RoundLengthBox.Text = Settings.Default.RoundLength.ToString( );
-            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(Settings.Default.FontFamily);
-            FontSizeBox.Text = Settings.Default.FontSize.ToString( );
-            //BoldBox.IsChecked = Settings.Default.Bold;
-            mainBox.FontWeight = (FontWeight) new FontWeightConverter( ).ConvertBack(Settings.Default.Bold, null, null, null);
-            EyeProtectBox.IsChecked = Settings.Default.EyeProtect;
-
-            WindowTopmost(null, null);
-            FontFamilySelectionChanged(null, null);
-            FontSizeTextChanged(null, null);
-            EyeProtectChecked(null, null);
         }
         catch
         {
@@ -78,10 +82,8 @@ public partial class MainWindow : Window
 
     private void EyeProtectChecked(object o, RoutedEventArgs e)
     {
-        SolidColorBrush white = new(Color.FromArgb(0xFF, 0xE6, 0xE6, 0xE6));
         SolidColorBrush green = new(Color.FromArgb(0xFF, 0xCF, 0xE8, 0xCC));
-        mainBox.Background = EyeProtectBox.IsChecked == true ? green : white;
-        //mainBox.Foreground = EyeProtectBox.IsChecked == true ? white : black;
+        mainBox.Background = EyeProtectBox.IsChecked == true ? green : Brushes.White;
     }
 
     private void WindowClosing(object o, CancelEventArgs e)

@@ -4,10 +4,13 @@ using System.Windows;
 using System.Windows.Interop;
 
 namespace TextCalculator;
-internal static class NativeMethods
+internal static partial class NativeMethods
 {
-    [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    public static extern bool SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SwitchToThisWindow(
+        IntPtr hWnd,
+        [MarshalAs(UnmanagedType.Bool)] bool fAltTab);
 
     public static IntPtr GetWindowHwndSource(DependencyObject window)
         => (PresentationSource.FromDependencyObject(window) as HwndSource).Handle;
