@@ -2,10 +2,10 @@ name: .NET Build
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
 
   pull_request:
-    branches: ["master"]
+    branches: ["main"]
 
 jobs:
   build:
@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-dotnet@v4
 
       - name: Build Solution
-        run: dotnet build --configuration Release
+        run: dotnet publish -p:PublishProfile=FolderProfile
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: App
-          path: ./TextCalculator/bin/Release/net6.0-windows/*
+          path: ./TextCalculator/publish/*

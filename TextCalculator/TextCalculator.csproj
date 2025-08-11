@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <TargetFramework>net9.0-windows</TargetFramework>
         <OutputType>WinExe</OutputType>
         <UseWPF>true</UseWPF>
-        <LangVersion>latest</LangVersion>
         <PublishReadyToRun>true</PublishReadyToRun>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <PropertyGroup>
         <StartupObject>TextCalculator.App</StartupObject>
@@ -16,16 +14,9 @@
     </PropertyGroup>
     <ItemGroup>
         <Content Include="TextCalculator.ico" />
-        <PackageReference Include="CoreCLR-NCalc" Version="3.1.253" />
-        <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
-        <Compile Update="Properties\Settings.Designer.cs">
-            <DesignTimeSharedInput>True</DesignTimeSharedInput>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Settings.settings</DependentUpon>
-        </Compile>
-        <None Update="Properties\Settings.settings">
-            <Generator>SettingsSingleFileGenerator</Generator>
-            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-        </None>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="NCalcSync" Version="5.6.0" />
+      <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
     </ItemGroup>
 </Project>

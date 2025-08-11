@@ -7,8 +7,7 @@ namespace TextCalculator;
 public class FontWeightConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        => (FontWeight) value > FontWeights.Normal;
-
+        => (FontWeight) value == FontWeights.Bold;
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         => (bool) value ? FontWeights.Bold : FontWeights.Normal;
 }

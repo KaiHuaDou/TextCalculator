@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using TextCalculator.Properties;
 
 namespace TextCalculator;
 public partial class MainWindow
@@ -27,7 +26,7 @@ public partial class MainWindow
         }
 
         double answer = Calculator.Calculate(parsedRaw);
-        answer = Math.Round(answer, Settings.Default.RoundLength, MidpointRounding.AwayFromZero);
+        answer = Math.Round(answer, App.Settings.RoundLength, MidpointRounding.AwayFromZero);
         if (AutoCopyResult.IsChecked == true)
             Clipboard.SetText(answer.ToString( ));
         string equalMark = raw[^1] == '=' ? "" : "=";

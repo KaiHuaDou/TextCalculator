@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using TextCalculator.Properties;
 
 namespace TextCalculator;
 
@@ -19,28 +18,28 @@ public partial class MainWindow : Window
 
     private void InitGUI( )
     {
-        FontFamilyBox.ItemsSource = Fonts.SystemFontFamilies.Select(o => o.Source).OrderBy(o => o);
+        FontFamilyBox.ItemsSource = Fonts.SystemFontFamilies.Select(o => o.Source).Order( );
         try
         {
-            TopmostBox.IsChecked = Settings.Default.Topmost;
+            TopmostBox.IsChecked = App.Settings.Topmost;
             WindowTopmost(null, null);
-            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(Settings.Default.FontFamily);
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(App.Settings.FontFamily);
             FontFamilySelectionChanged(null, null);
-            FontSizeBox.Text = Settings.Default.FontSize.ToString( );
+            FontSizeBox.Text = App.Settings.FontSize.ToString( );
             FontSizeTextChanged(null, null);
-            EyeProtectBox.IsChecked = Settings.Default.EyeProtect;
+            EyeProtectBox.IsChecked = App.Settings.EyeProtect;
             EyeProtectChecked(null, null);
 
-            mainBox.FontWeight = (FontWeight) new FontWeightConverter( ).ConvertBack(Settings.Default.Bold, null, null, null);
-            AutoCopyResult.IsChecked = Settings.Default.AutoCopy;
-            DuplicateResult.IsChecked = Settings.Default.Duplicate;
-            RoundLengthBox.Text = Settings.Default.RoundLength.ToString( );
+            mainBox.FontWeight = (FontWeight) new FontWeightConverter( ).ConvertBack(App.Settings.Bold, null, null, null);
+            AutoCopyResult.IsChecked = App.Settings.AutoCopy;
+            DuplicateResult.IsChecked = App.Settings.Duplicate;
+            RoundLengthBox.Text = App.Settings.RoundLength.ToString( );
         }
         catch
         {
             FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(mainBox.FontFamily.Source);
             FontSizeBox.Text = mainBox.FontSize.ToString( );
-            Settings.Default.RoundLength = 3;
+            App.Settings.RoundLength = 3;
             RoundLengthBox.Text = "3";
         }
     }
@@ -78,7 +77,7 @@ public partial class MainWindow : Window
         => mainBox.FontSize = double.TryParse(FontSizeBox.Text, out double result) ? result : 22;
 
     private void RoundLengthChanged(object o, TextChangedEventArgs e)
-        => Settings.Default.RoundLength = int.TryParse(RoundLengthBox.Text, out int result) ? result : 3;
+        => App.Settings.RoundLength = int.TryParse(RoundLengthBox.Text, out int result) ? result : 3;
 
     private void EyeProtectChecked(object o, RoutedEventArgs e)
     {
@@ -88,13 +87,12 @@ public partial class MainWindow : Window
 
     private void WindowClosing(object o, CancelEventArgs e)
     {
-        Settings.Default.Topmost = Topmost;
-        Settings.Default.AutoCopy = (bool) AutoCopyResult.IsChecked;
-        Settings.Default.Duplicate = (bool) DuplicateResult.IsChecked;
-        Settings.Default.FontFamily = mainBox.FontFamily.Source;
-        Settings.Default.FontSize = mainBox.FontSize;
-        Settings.Default.Bold = (bool) BoldBox.IsChecked;
-        Settings.Default.EyeProtect = (bool) EyeProtectBox.IsChecked;
-        Settings.Default.Save( );
+        App.Settings.Topmost = Topmost;
+        App.Settings.AutoCopy = (bool) AutoCopyResult.IsChecked;
+        App.Settings.Duplicate = (bool) DuplicateResult.IsChecked;
+        App.Settings.FontFamily = mainBox.FontFamily.Source;
+        App.Settings.FontSize = mainBox.FontSize;
+        App.Settings.Bold = (bool) BoldBox.IsChecked;
+        App.Settings.EyeProtect = (bool) EyeProtectBox.IsChecked;
     }
 }

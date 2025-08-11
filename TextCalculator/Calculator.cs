@@ -68,7 +68,7 @@ public static class Calculator
         if (double.TryParse(expr, out _))
             return double.NaN;
         Expression e = new(expr.ToUpperInvariant( ));
-        e.EvaluateFunction += (string name, FunctionArgs args) =>
+        e.EvaluateFunction += (name, args) =>
         {
             List<double> parameters = [];
             foreach (Expression parameter in args.Parameters)
@@ -85,7 +85,7 @@ public static class Calculator
             }
             args.Result = ParseFunction(name, parameters);
         };
-        e.EvaluateParameter += (string name, ParameterArgs args) => args.Result = ParseParameter(name);
+        e.EvaluateParameter += (name, args) => args.Result = ParseParameter(name);
         string evaluated = "NaN";
         try { evaluated = e.Evaluate( ).ToString( ); } catch { }
         return double.TryParse(evaluated, out double result) ? result : double.NaN;
@@ -146,7 +146,7 @@ public static class Calculator
     {
         return (name switch
         {
-            "E" => E,
+            "E" or "EE" => E,
             "PI" or "π" => PI,
             "TAU" => Tau,
             _ => double.NaN
@@ -165,8 +165,8 @@ public static class Calculator
             // 汉字运算
             {"一", "1"}, {"二", "2"}, {"三", "3"}, {"四", "4"},
             {"五", "5"}, {"六", "6"}, {"七", "7"}, {"八", "8"},
-            {"九", "9"}, {"十", "10"}, {"百", "100"},
-            {"千", "1000"}, {"万", "10000"}, {"亿", "100000000"},
+            {"九", "9"}, {"十", "10"}, {"百", "00"},
+            {"千", "000"}, {"万", "0000"}, {"亿", "00000000"},
             {"加","+"}, {"减","-"}, {"乘","*"}, {"除","/"}, {"百分之", "0.01*"},
             // 特殊符号
             {"×", "*"}, {"÷", "/"}, {"'", ""},
