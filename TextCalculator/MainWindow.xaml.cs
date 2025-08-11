@@ -11,20 +11,20 @@ public partial class MainWindow : Window
     public MainWindow( )
     {
         InitializeComponent( );
+        Height = App.Settings.Height;
+        Width = App.Settings.Width;
     }
 
     private void WindowLoaded(object o, RoutedEventArgs e)
-        => Dispatcher.InvokeAsync(InitGUI);
+        => InitGUI( );
 
     private void InitGUI( )
     {
-        FontFamilyBox.ItemsSource = Fonts.SystemFontFamilies.Select(o => o.Source).Order( );
         try
         {
+            mainBox.FontFamily = new FontFamily(App.Settings.FontFamily);
             TopmostBox.IsChecked = App.Settings.Topmost;
             WindowTopmost(null, null);
-            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(App.Settings.FontFamily);
-            FontFamilySelectionChanged(null, null);
             FontSizeBox.Text = App.Settings.FontSize.ToString( );
             FontSizeTextChanged(null, null);
             EyeProtectBox.IsChecked = App.Settings.EyeProtect;
@@ -42,15 +42,6 @@ public partial class MainWindow : Window
             App.Settings.RoundLength = 3;
             RoundLengthBox.Text = "3";
         }
-    }
-
-    public void SetInputNow(char c)
-    {
-        int selectIndex = mainBox.SelectionStart;
-        char[] textArray = mainBox.Text.ToCharArray( );
-        textArray[mainBox.SelectionStart - 1] = c;
-        mainBox.Text = new string(textArray);
-        mainBox.SelectionStart = selectIndex;
     }
 
     private (int, int, string) GetCharIndex(string text)
@@ -94,5 +85,22 @@ public partial class MainWindow : Window
         App.Settings.FontSize = mainBox.FontSize;
         App.Settings.Bold = (bool) BoldBox.IsChecked;
         App.Settings.EyeProtect = (bool) EyeProtectBox.IsChecked;
+        App.Settings.Height = ActualHeight;
+        App.Settings.Width = ActualWidth;
+    }
+
+    private void ExpanderExpanded(object o, RoutedEventArgs e)
+    {
+        if (FontFamilyBox.ItemsSource != null)
+            return;
+        try
+        {
+            FontFamilyBox.ItemsSource = Fonts.SystemFontFamilies.Select(o => o.Source).Order( );
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(App.Settings.FontFamily);
+        }
+        catch
+        {
+            FontFamilyBox.SelectedIndex = FontFamilyBox.Items.IndexOf(mainBox.FontFamily.Source);
+        }
     }
 }

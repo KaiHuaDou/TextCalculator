@@ -42,7 +42,7 @@
                     <TextBlock Text="小数点" />
                     <TextBox x:Name="RoundLengthBox" TextChanged="RoundLengthChanged" />
                 </DockPanel>
-                <Expander Header="字体与字号">
+                <Expander Header="字体与字号" Expanded="ExpanderExpanded">
                     <StackPanel Margin="0,10,0,0">
                         <DockPanel>
                             <TextBlock Text="字体" />
@@ -52,9 +52,10 @@
                             <TextBlock Text="字号" />
                             <TextBox x:Name="FontSizeBox" TextChanged="FontSizeTextChanged" />
                         </DockPanel>
-                        <CheckBox x:Name="BoldBox" Content="粗体" IsChecked="{Binding FontWeight, Converter={StaticResource FontWeightConverter}, ElementName=mainBox, Mode=TwoWay}" />
+                        <CheckBox x:Name="BoldBox" IsChecked="{Binding FontWeight, Converter={StaticResource FontWeightConverter}, ElementName=mainBox, Mode=TwoWay}" Content="粗体" />
                         <CheckBox x:Name="EyeProtectBox"
-                                  Checked="EyeProtectChecked" Content="护眼背景" Unchecked="EyeProtectChecked" />
+                                  Checked="EyeProtectChecked" Unchecked="EyeProtectChecked"
+                                  Content="护眼背景" />
                     </StackPanel>
                 </Expander>
             </StackPanel>
@@ -63,7 +64,7 @@
                  Margin="10,0,0,10"
                  Background="#FFE6E6E6" Foreground="#FF202020"
                  FontFamily="Consolas" FontSize="22"
-                 AcceptsReturn="True" PreviewKeyDown="MainBoxKeyDown" ScrollViewer.CanContentScroll="True"
-                 TextWrapping="Wrap" />
+                 AcceptsReturn="True" PreviewKeyDown="MainBoxKeyDown"
+                 ScrollViewer.CanContentScroll="True" TextWrapping="Wrap" />
     </DockPanel>
 </Window>

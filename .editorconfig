@@ -1,10 +1,10 @@
-root = true
+﻿root = true
 
 end_of_line = lf
-indent_size = 4
-indent_style = space
 insert_final_newline = true
 tab_width = 4
+indent_size = 4
+indent_style = space
 
 #### .NET 编码约定 ####
 
@@ -70,7 +70,7 @@ dotnet_remove_unnecessary_suppression_exclusions = 0
 
 # 新行首选项
 dotnet_style_allow_multiple_blank_lines_experimental = false:suggestion
-dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
+dotnet_style_allow_statement_immediately_after_block_experimental = true:suggestion
 
 # 命名规则
 dotnet_naming_rule.interface_should_be_interface.severity = suggestion
@@ -86,23 +86,24 @@ dotnet_naming_rule.types_should_be_bigstart.symbols = types
 # 符号规范
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.interface.applicable_kinds = interface
-dotnet_naming_symbols.interface.required_modifiers = 
+dotnet_naming_symbols.interface.required_modifiers =
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
-dotnet_naming_symbols.non_field_members.required_modifiers = 
+dotnet_naming_symbols.non_field_members.required_modifiers =
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
-dotnet_naming_symbols.types.required_modifiers = 
+dotnet_naming_symbols.types.required_modifiers =
 
 # 命名样式
 dotnet_naming_style.bigstart.capitalization = pascal_case
-dotnet_naming_style.bigstart.required_prefix = 
-dotnet_naming_style.bigstart.required_suffix = 
-dotnet_naming_style.bigstart.word_separator = 
+dotnet_naming_style.bigstart.required_prefix =
+dotnet_naming_style.bigstart.required_suffix =
+dotnet_naming_style.bigstart.word_separator =
 dotnet_naming_style.interface.capitalization = pascal_case
 dotnet_naming_style.interface.required_prefix = I
-dotnet_naming_style.interface.required_suffix = 
-dotnet_naming_style.interface.word_separator = 
+dotnet_naming_style.interface.required_suffix =
+dotnet_naming_style.interface.word_separator =
+dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
 
 ## C# 首选项
 
@@ -119,7 +120,7 @@ csharp_style_expression_bodied_constructors = false:suggestion
 csharp_style_expression_bodied_indexers = when_on_single_line:suggestion
 csharp_style_expression_bodied_lambdas = when_on_single_line:suggestion
 csharp_style_expression_bodied_local_functions = when_on_single_line:suggestion
-csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_methods = true:suggestion
 csharp_style_expression_bodied_operators = when_on_single_line:suggestion
 csharp_style_expression_bodied_properties = when_on_single_line:suggestion
 
@@ -132,7 +133,7 @@ csharp_style_prefer_pattern_matching = true:suggestion
 csharp_style_prefer_switch_expression = true:suggestion
 
 # Null 检查首选项
-csharp_style_conditional_delegate_call = true:suggestion
+csharp_style_conditional_delegate_call = false:suggestion
 csharp_prefer_static_local_function = true:suggestion
 csharp_preferred_modifier_order = public,private,protected,internal,file,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,required,volatile,async
 csharp_style_prefer_readonly_struct = true:suggestion
@@ -157,6 +158,10 @@ csharp_style_prefer_utf8_string_literals = true:suggestion
 csharp_style_throw_expression = true:suggestion
 csharp_style_unused_value_assignment_preference = discard_variable:silent
 csharp_style_unused_value_expression_statement_preference = discard_variable:silent
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_prefer_static_anonymous_function = true:suggestion
+csharp_prefer_system_threading_lock = true:suggestion
+csharp_style_prefer_unbound_generic_type_in_nameof = true:suggestion
 
 # "using" 指令首选项
 csharp_new_line_before_catch = true
@@ -168,9 +173,9 @@ csharp_new_line_before_open_brace = all
 csharp_new_line_between_query_expression_clauses = false
 csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false:suggestion
 csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = false:suggestion
-csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = true:suggestion
+csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = false:suggestion
 csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false:suggestion
-csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
+csharp_style_allow_embedded_statements_on_same_line_experimental = true:suggestion
 csharp_using_directive_placement = outside_namespace:suggestion
 
 # 缩进首选项
@@ -218,6 +223,7 @@ dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0010.severity = none
 dotnet_diagnostic.IDE0011.severity = suggestion
 dotnet_diagnostic.IDE0021.severity = none
+dotnet_diagnostic.IDE0022.severity = none
 dotnet_diagnostic.IDE0027.severity = suggestion
 dotnet_diagnostic.IDE0044.severity = none
 dotnet_diagnostic.IDE0058.severity = none
@@ -811,3 +817,4 @@ dotnet_diagnostic.CA2241.severity = warning
 dotnet_diagnostic.CA2242.severity = warning
 dotnet_diagnostic.CA2243.severity = warning
 dotnet_diagnostic.CA5122.severity = warning
+dotnet_diagnostic.RCS1163.severity = none

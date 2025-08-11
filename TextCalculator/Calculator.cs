@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NCalc;
 using static System.Math;
 
@@ -63,71 +62,66 @@ public static class Calculator
     public static bool IsTriangle(double a, double b, double c)
         => (a + b > c) && (a + c > b) && (b + c > a);
 
-    public static double Calculate(string expr)
+    public static string Calculate(string expr)
     {
         if (double.TryParse(expr, out _))
-            return double.NaN;
-        Expression e = new(expr.ToUpperInvariant( ));
+            return "";
+        Expression e = new(expr.ToUpperInvariant( ))
+        {
+            Options = ExpressionOptions.IgnoreCaseAtBuiltInFunctions
+        };
         e.EvaluateFunction += (name, args) =>
         {
-            List<double> parameters = [];
-            foreach (Expression parameter in args.Parameters)
+            try
             {
-                try
-                {
+                List<double> parameters = [];
+                foreach (Expression parameter in args.Parameters)
                     parameters.Add(double.Parse(parameter.Evaluate( ).ToString( )));
-                }
-                catch
-                {
-                    args.Result = double.NaN;
-                    return;
-                }
+                double result = ParseFunction(name, parameters);
+                if (!double.IsNaN(result))
+                    args.Result = result.ToString( );
             }
-            args.Result = ParseFunction(name, parameters);
+            catch { }
         };
-        e.EvaluateParameter += (name, args) => args.Result = ParseParameter(name);
-        string evaluated = "NaN";
-        try { evaluated = e.Evaluate( ).ToString( ); } catch { }
-        return double.TryParse(evaluated, out double result) ? result : double.NaN;
+        e.EvaluateParameter += (name, args) =>
+        {
+            double result = ParseParameter(name);
+            if (!double.IsNaN(result))
+                args.Result = result;
+        };
+        try
+        {
+            return e.Evaluate( ).ToString( );
+        }
+        catch
+        {
+            return "";
+        }
     }
 
-    public static string ParseFunction(string name, IList<double> args)
+    public static double ParseFunction(string name, IList<double> args)
     {
-        return (name switch
+        return name switch
         {
             // 单参数
-            "ABS" => Abs(args[0]),
-            "ACOS" or "ARCCOS" => Acos(args[0]),
             "ACOSH" or "ARCCOSH" => Acosh(args[0]),
-            "ASIN" or "ARCSIN" => Asin(args[0]),
             "ASINH" or "ARCSINH" => Asinh(args[0]),
-            "ATAN" or "ARCTAN" => Atan(args[0]),
             "CBRT" => Cbrt(args[0]),
-            "CEIL" or "CEILING" => Ceiling(args[0]),
-            "COS" => Cos(args[0]),
             "COT" => 1.0 / Tan(args[0]),
             "CSC" => 1.0 / Cos(args[0]),
             "DEG" or "DEGREE" => Deg(args[0]),
-            "EXP" => Exp(args[0]),
-            "FLOOR" => Floor(args[0]),
             "ILOGB" => ILogB(args[0]),
             "LOGE" or "LN" => Log(args[0]),
-            "LOG10" or "LG" => Log10(args[0]),
             "LOG2" or "L2" => Log2(args[0]),
             "RAD" or "RADIAN" => Rad(args[0]),
-            "RND" or "ROUND" => Round(args[0], 0, MidpointRounding.AwayFromZero),
             "SEC" => 1.0 / Sin(args[0]),
-            "SGN" or "SIGN" => Sign(args[0]),
+            "SGN" => Sign(args[0]),
             "SIN" => Sin(args[0]),
-            "SQRT" => Sqrt(args[0]),
-            "TAN" => Tan(args[0]),
-            "TRUNC" or "TRUNCATE" => Truncate(args[0]),
+            "TRUNC" => Truncate(args[0]),
 
             // 双参数
             "ATAN2" => Atan2(args[0], args[1]),
-            "LOG" => Log(args[0], args[1]),
             "LINEAR" or "LINEAREQUATION" => LinearEquation(args[0], args[1]),
-            "POW" => Pow(args[0], args[1]),
             "SCALEB" => ScaleB(args[0], (int) args[1]),
 
             // 多参数
@@ -139,23 +133,23 @@ public static class Calculator
             "CUBIC" or "CUBICEQUATION" => CubicEquation(args[0], args[1], args[2], args[3]),
 
             _ => double.NaN,
-        }).ToString( );
+        };
     }
 
-    public static string ParseParameter(string name)
+    public static double ParseParameter(string name)
     {
-        return (name switch
+        return name switch
         {
             "E" or "EE" => E,
             "PI" or "π" => PI,
             "TAU" => Tau,
+            "INF" => double.PositiveInfinity,
             _ => double.NaN
-        }).ToString( );
+        };
     }
 
     public static string ExprFilter(string expr)
     {
-        expr = expr.Trim( );
         Dictionary<string, string> filters = new( )
         {
             // 中文标点
@@ -169,7 +163,7 @@ public static class Calculator
             {"千", "000"}, {"万", "0000"}, {"亿", "00000000"},
             {"加","+"}, {"减","-"}, {"乘","*"}, {"除","/"}, {"百分之", "0.01*"},
             // 特殊符号
-            {"×", "*"}, {"÷", "/"}, {"'", ""},
+            {"^", "**"}, {"×", "*"}, {"÷", "/"}, {"'", ""},
             // 多级括号
             {"{", "("}, {"}", ")"}, {"[", "("}, {"]", ")"},
             // 数学运算
