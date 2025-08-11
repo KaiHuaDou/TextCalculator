@@ -4,6 +4,10 @@
         <OutputType>WinExe</OutputType>
         <UseWPF>true</UseWPF>
         <PublishReadyToRun>true</PublishReadyToRun>
+        <PublishReadyToRunUseCrossgen2>True</PublishReadyToRunUseCrossgen2>
+        <PublishReadyToRunComposite>True</PublishReadyToRunComposite>
+        <TieredPGO>true</TieredPGO>
+        <TieredCompilation>true</TieredCompilation>
     </PropertyGroup>
     <PropertyGroup>
         <StartupObject>TextCalculator.App</StartupObject>
@@ -17,6 +21,5 @@
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="NCalcSync" Version="5.6.0" />
-      <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
     </ItemGroup>
 </Project>

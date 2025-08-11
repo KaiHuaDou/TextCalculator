@@ -1,13 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
-using SingleInstanceCore;
 
 namespace TextCalculator;
-public partial class App : Application, ISingleInstance
+public partial class App : Application
 {
     public static Settings Settings { get; set; }
+
+    public static bool SettingsLoaded;
 
     public static string SettingsFile = Path.Join(
         Path.GetDirectoryName(Environment.ProcessPath),
@@ -25,28 +27,26 @@ public partial class App : Application, ISingleInstance
         }
     }
 
-    public void OnInstanceInvoked(string[] args)
-        => MainWindow.Activate( );
-
-    private void AppStartup(object sender, StartupEventArgs e)
+    private void AppStartup(object o, StartupEventArgs e)
     {
-        if (!this.InitializeAsFirstInstance("TextCalculator_1_0_1"))
-            Current.Shutdown( );
-        try
+        Task.Run(( ) =>
         {
-            string json = File.ReadAllText(SettingsFile);
-            Settings = JsonSerializer.Deserialize<Settings>(json) ?? new Settings( );
-        }
-        catch
-        {
-            Settings = new Settings( );
-        }
+            try
+            {
+                string json = File.ReadAllText(App.SettingsFile);
+                Settings = JsonSerializer.Deserialize<Settings>(json) ?? new Settings( );
+            }
+            catch
+            {
+                Settings = new Settings( );
+            }
+            SettingsLoaded = true;
+        });
     }
 
-    private void AppExit(object sender, ExitEventArgs e)
+    private void AppExit(object o, ExitEventArgs e)
     {
         string json = JsonSerializer.Serialize(Settings);
         File.WriteAllText(SettingsFile, json);
-        SingleInstance.Cleanup( );
     }
 }

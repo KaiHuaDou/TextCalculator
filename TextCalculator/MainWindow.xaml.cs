@@ -11,8 +11,6 @@ public partial class MainWindow : Window
     public MainWindow( )
     {
         InitializeComponent( );
-        Height = App.Settings.Height;
-        Width = App.Settings.Width;
     }
 
     private void WindowLoaded(object o, RoutedEventArgs e)
@@ -20,6 +18,10 @@ public partial class MainWindow : Window
 
     private void InitGUI( )
     {
+        while (!App.SettingsLoaded) ;
+
+        Height = App.Settings.Height;
+        Width = App.Settings.Width;
         try
         {
             mainBox.FontFamily = new FontFamily(App.Settings.FontFamily);
