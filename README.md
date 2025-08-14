@@ -2,14 +2,12 @@
 
 ![][Shields License] ![][Shields Release] ![][Shields Downloads] ![][Shields Commit] ![][Shields CI]
 
-![][Shields CSharp] ![][Shields .NET] ![][Shields OS] ![][Shields IDE]
-
-[![Gitmoji][Gitmoji]](https://gitmoji.dev)
+![][Shields CSharp] ![][Shields .NET] ![][Shields OS]
 
 ## 特点
 
 - 极简界面
-- 纯文本界面，方便高级编辑
+- 纯文本界面，方便编辑
 - 支持几乎全部数学函数
 - 支持角度-弧度转换
 - 支持引用数学常数：`π`（`pi`）、`e`、`tau`
@@ -32,5 +30,3 @@
 [Shields CSharp]: https://img.shields.io/badge/13.0-version?logo=csharp&label=C%23&color=%23512BD4
 [Shields .NET]: https://img.shields.io/badge/>=9.0-version?logo=dotnet&label=.NET&color=%23512BD4
 [Shields OS]: https://img.shields.io/badge/>=Windows%2010-version?logo=windows&label=OS&color=%230078D4
-[Shields IDE]: https://img.shields.io/badge/2022-version?logo=visual%20studio&label=Visual%20Studio&color=%235C2D91
-[Gitmoji]: https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg

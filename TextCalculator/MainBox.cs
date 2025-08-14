@@ -9,57 +9,65 @@ public partial class MainWindow
     {
         if (e.Key is Key.ImeProcessed or not Key.Return)
             return;
-        e.Handled = true;
 
-        (int lineIndex, int charIndex, string raw) = GetCharIndex(mainBox.Text);
-        string parsedRaw = raw.Trim( );
-        if (string.IsNullOrWhiteSpace(parsedRaw))
-        {
-            mainBox.Text = mainBox.Text.Insert(charIndex - 2, "\r\n");
-            mainBox.SelectionStart = charIndex - 1;
+        int lineIndex = mainBox.GetLineIndexFromCharacterIndex(mainBox.SelectionStart);
+        string line = mainBox.GetLineText(lineIndex);
+
+        if (string.IsNullOrWhiteSpace(line))
             return;
-        }
-        switch (parsedRaw)
-        {
-            case "cls" or "clear": mainBox.Text = ""; return;
-            case "exit": Close( ); return;
-        }
-        parsedRaw = Calculator.ExprFilter(parsedRaw);
 
-        string answer = Calculator.Calculate(parsedRaw);
+        int lineStartIndex = mainBox.GetCharacterIndexFromLineIndex(lineIndex);
+        int lineLength = mainBox.GetLineLength(lineIndex);
+        int lineEndIndex = lineStartIndex + lineLength;
+
+        (string expr, string equalMark) = Calculator.Filter(line);
+        string answer = Calculator.Calculate(expr);
+        string result = FormatResult(answer, equalMark);
+
+        int insertIndex = mainBox.Text[lineEndIndex - 1] switch
+        {
+            '\r' => lineEndIndex - 1,
+            '\n' => lineEndIndex - 2,
+            _ => lineEndIndex
+        };
+        mainBox.Text = mainBox.Text.Insert(insertIndex, result);
+        mainBox.SelectionStart = insertIndex + result.Length;
+
+        e.Handled = true;
+    }
+
+    private string FormatResult(string answer, string equalMark)
+    {
         if (double.TryParse(answer, out double value))
         {
             answer = Math.Round(value, App.Settings.RoundLength, MidpointRounding.AwayFromZero).ToString( );
         }
         if (AutoCopyResult.IsChecked == true)
+        {
             Clipboard.SetText(answer);
-        string equalMark = raw[^1] == '=' ? "" : "=";
+        }
         string duplicate = DuplicateResult.IsChecked == true ? answer : "";
-        string result = string.IsNullOrWhiteSpace(answer)
+        return string.IsNullOrWhiteSpace(answer)
             ? "\r\n"
             : $"{equalMark}{answer}\r\n{duplicate}";
-        // 此处为 Windows 系统使用 CRLF 换行符，导致在换行处理时有 2 字符的偏差。
-        bool flag = lineIndex + 1 >= mainBox.Text.Split("\r\n").Length;
-        mainBox.Text = mainBox.Text.Insert(charIndex - 2, result);
-        mainBox.SelectionStart = charIndex + (flag ? result.Length : result.Length - 2);
     }
 
     private void ClearBox(object o, RoutedEventArgs e)
         => mainBox.Clear( );
 
     private void CopyLine(object o, RoutedEventArgs e)
-        => Clipboard.SetText(GetCharIndex(mainBox.Text).Item3);
+        => Clipboard.SetText(mainBox.GetLineText(mainBox.GetLineIndexFromCharacterIndex(mainBox.CaretIndex)));
 
     private void CopyAction(object o, RoutedEventArgs e)
     {
-        string raw = GetCharIndex(mainBox.Text).Item3;
+        string raw = mainBox.GetLineText(mainBox.GetLineIndexFromCharacterIndex(mainBox.CaretIndex));
         int equalIndex = raw.LastIndexOf('=');
         Clipboard.SetText(equalIndex == -1 ? raw : raw[..equalIndex]);
     }
 
     private void CopyResult(object o, RoutedEventArgs e)
     {
-        string raw = GetCharIndex(mainBox.Text).Item3;
+        string raw = mainBox.GetLineText(mainBox.GetLineIndexFromCharacterIndex(mainBox.CaretIndex));
         int equalIndex = raw.LastIndexOf('=');
         Clipboard.SetText(equalIndex == -1 ? raw : raw[(equalIndex + 1)..]);
     }

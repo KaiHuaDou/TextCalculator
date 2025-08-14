@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,14 +15,19 @@ public partial class MainWindow : Window
     }
 
     private void WindowLoaded(object o, RoutedEventArgs e)
-        => InitGUI( );
-
-    private void InitGUI( )
     {
         while (!App.SettingsLoaded) ;
 
         Height = App.Settings.Height;
         Width = App.Settings.Width;
+
+        InitGUI( );
+
+        Task.Run(( ) => new NCalc.Expression("1+1").Evaluate( ));
+    }
+
+    private void InitGUI( )
+    {
         try
         {
             mainBox.FontFamily = new FontFamily(App.Settings.FontFamily);
@@ -44,20 +50,6 @@ public partial class MainWindow : Window
             App.Settings.RoundLength = 3;
             RoundLengthBox.Text = "3";
         }
-    }
-
-    private (int, int, string) GetCharIndex(string text)
-    {
-        string[] lines = text.Split("\r\n");
-        int charIndex = 0, lineIndex = 0;
-        foreach (string line in lines)
-        {
-            charIndex += line.Length + 2;
-            if (charIndex > mainBox.SelectionStart)
-                break;
-            lineIndex++;
-        }
-        return (lineIndex, charIndex, lines[lineIndex]);
     }
 
     private void WindowTopmost(object o, RoutedEventArgs e)
