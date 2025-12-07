@@ -10,30 +10,36 @@ public partial class MainWindow
         if (e.Key is Key.ImeProcessed or not Key.Return)
             return;
 
-        int lineIndex = mainBox.GetLineIndexFromCharacterIndex(mainBox.SelectionStart);
-        string line = mainBox.GetLineText(lineIndex);
+        (_, int lineEnd, string line) = GetLine( );
 
         if (string.IsNullOrWhiteSpace(line))
             return;
-
-        int lineStartIndex = mainBox.GetCharacterIndexFromLineIndex(lineIndex);
-        int lineLength = mainBox.GetLineLength(lineIndex);
-        int lineEndIndex = lineStartIndex + lineLength;
 
         (string expr, string equalMark) = Calculator.Filter(line);
         string answer = Calculator.Calculate(expr);
         string result = FormatResult(answer, equalMark);
 
-        int insertIndex = mainBox.Text[lineEndIndex - 1] switch
+        int insertIndex = mainBox.Text[lineEnd - 1] switch
         {
-            '\r' => lineEndIndex - 1,
-            '\n' => lineEndIndex - 2,
-            _ => lineEndIndex
+            '\r' or '\n' => lineEnd - 1,
+            _ => lineEnd
         };
         mainBox.Text = mainBox.Text.Insert(insertIndex, result);
         mainBox.SelectionStart = insertIndex + result.Length;
 
         e.Handled = true;
+    }
+
+    private (int, int, string) GetLine( )
+    {
+        int i, j;
+        i = j = mainBox.CaretIndex - 1;
+        while (mainBox.Text[i] != '\n' && i > 0)
+            i--;
+        while (mainBox.Text[j] != '\r' && mainBox.Text[j] != '\n' && j < mainBox.Text.Length - 1)
+            j++;
+        j++;
+        return (i, j, mainBox.Text[i..j].Trim( ));
     }
 
     private string FormatResult(string answer, string equalMark)
@@ -56,18 +62,18 @@ public partial class MainWindow
         => mainBox.Clear( );
 
     private void CopyLine(object o, RoutedEventArgs e)
-        => Clipboard.SetText(mainBox.GetLineText(mainBox.GetLineIndexFromCharacterIndex(mainBox.CaretIndex)));
+        => Clipboard.SetText(GetLine( ).Item3);
 
     private void CopyAction(object o, RoutedEventArgs e)
     {
-        string raw = mainBox.GetLineText(mainBox.GetLineIndexFromCharacterIndex(mainBox.CaretIndex));
+        string raw = GetLine( ).Item3;
         int equalIndex = raw.LastIndexOf('=');
         Clipboard.SetText(equalIndex == -1 ? raw : raw[..equalIndex]);
     }
 
     private void CopyResult(object o, RoutedEventArgs e)
     {
-        string raw = mainBox.GetLineText(mainBox.GetLineIndexFromCharacterIndex(mainBox.CaretIndex));
+        string raw = GetLine( ).Item3;
         int equalIndex = raw.LastIndexOf('=');
         Clipboard.SetText(equalIndex == -1 ? raw : raw[(equalIndex + 1)..]);
     }

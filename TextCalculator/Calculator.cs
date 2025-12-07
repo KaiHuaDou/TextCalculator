@@ -9,16 +9,17 @@ public static class Calculator
     {
         // 中文标点
         {"“", ""}, {"”", ""}, {"‘", ""}, {"’", ""},
-        {"（", "("}, {"）", ")"}, {"、", "/"}, {"，", ","},
+        {"（", "("}, {"）", ")"}, {"【", "("}, {"】", ")"},{"「", "("}, {"」", ")"},
+        {"、", "/"}, {"，", ""},
         {"……", "^"}, {"——", "-"}, {"《", "<"}, {"》", ">"},
         // 汉字运算
         {"一", "1"}, {"二", "2"}, {"三", "3"}, {"四", "4"},
         {"五", "5"}, {"六", "6"}, {"七", "7"}, {"八", "8"},
-        {"九", "9"}, {"十", "10"}, {"百", "00"},
-        {"千", "000"}, {"万", "0000"}, {"亿", "00000000"},
+        {"九", "9"}, {"十", "10"}, {"零", "0"},
+        {"百", "00"}, {"千", "000"}, {"万", "0000"}, {"亿", "00000000"},
         {"加","+"}, {"减","-"}, {"乘","*"}, {"除","/"}, {"百分之", "0.01*"},
         // 特殊符号
-        {"^", "**"}, {"×", "*"}, {"÷", "/"}, {"'", ""},
+        {"^", "**"}, {"×", "*"}, {"÷", "/"}, {"'", ""}, {",", ""},
         // 多级括号
         {"{", "("}, {"}", ")"}, {"[", "("}, {"]", ")"},
         // 数学运算
@@ -64,7 +65,6 @@ public static class Calculator
 
     public static (string, string) Filter(string expr)
     {
-        expr = expr.Trim( );
         foreach (KeyValuePair<string, string> filter in filters)
             expr = expr.Replace(filter.Key, filter.Value);
         string equalMark = "=";
@@ -140,15 +140,13 @@ public static class Calculator
 
             // 双参数
             "ATAN2" => Atan2(args[0], args[1]),
-            "LINEAR" or "LINEAREQUATION" => LinearEquation(args[0], args[1]),
-            "SCALEB" => ScaleB(args[0], (int) args[1]),
+            "LINEAR" => LinearEquation(args[0], args[1]),
 
             // 多参数
-            "FUSEMULADD" or "FUSEDMULTIPLYADD" => FusedMultiplyAdd(args[0], args[1], args[2]),
             "TRI" or "ISTRIANGLE" => IsTriangle(args[0], args[1], args[2]) ? 1 : 0,
             "HERON" => Heron(args[0], args[1], args[2]),
-            "QUADRATIC" => QuadraticEquation(true, args[0], args[1], args[2]),
-            "QUADRADELTA" => QuadraticEquation(false, args[0], args[1], args[2]),
+            "QUAD" => QuadraticEquation(true, args[0], args[1], args[2]),
+            "QUADDELTA" => QuadraticEquation(false, args[0], args[1], args[2]),
             "CUBIC" => CubicEquation(args[0], args[1], args[2], args[3]),
             "FOUR" => FourEquation(args[0], args[1], args[2], args[3], args[4]),
 
@@ -162,7 +160,7 @@ public static class Calculator
         {
             "E" or "EE" => E,
             "PI" or "π" => PI,
-            "TAU" => Tau,
+            "TAU" or "τ" => Tau,
             "INF" => double.PositiveInfinity,
             _ => double.NaN
         };

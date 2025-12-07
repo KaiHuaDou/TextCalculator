@@ -21,6 +21,7 @@
         <DebugType>full</DebugType>
         <WarningLevel>7</WarningLevel>
         <ApplicationIcon>TextCalculator.ico</ApplicationIcon>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="TextCalculator.ico" />
