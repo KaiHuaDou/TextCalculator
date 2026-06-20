@@ -27,6 +27,6 @@
         <Content Include="TextCalculator.ico" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="NCalcSync" Version="5.6.0" />
+        <PackageReference Include="NCalcSync" Version="6.1.1" />
     </ItemGroup>
 </Project>
