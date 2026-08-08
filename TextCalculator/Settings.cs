@@ -1,4 +1,6 @@
-﻿namespace TextCalculator;
+﻿using System.Text.Json.Serialization;
+
+namespace TextCalculator;
 
 public class Settings( )
 {
@@ -13,3 +15,7 @@ public class Settings( )
     public double Height { get; set; } = 600;
     public double Width { get; set; } = 800;
 }
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(Settings))]
+internal sealed partial class SettingsSerializeContext : JsonSerializerContext;

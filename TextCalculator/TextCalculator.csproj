@@ -6,27 +6,32 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <PropertyGroup>
-        <PublishSingleFile>true</PublishSingleFile>
-        <PublishReadyToRun>true</PublishReadyToRun>
-        <PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
-        <PublishReadyToRunComposite>true</PublishReadyToRunComposite>
         <PlatformTarget>x64</PlatformTarget>
         <Prefer32Bit>false</Prefer32Bit>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
+        <EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <SelfContained>false</SelfContained>
-        <TieredCompilation>true</TieredCompilation>
     </PropertyGroup>
     <PropertyGroup>
         <StartupObject>TextCalculator.App</StartupObject>
         <AnalysisLevel>latest-recommended</AnalysisLevel>
-        <DebugType>full</DebugType>
         <WarningLevel>7</WarningLevel>
         <ApplicationIcon>TextCalculator.ico</ApplicationIcon>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="TextCalculator.ico" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="NCalcSync" Version="5.6.0" />
+      <PackageReference Include="NCalc.Core" Version="7.1.0" />
     </ItemGroup>
 </Project>

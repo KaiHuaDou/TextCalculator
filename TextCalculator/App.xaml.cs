@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Runtime;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace TextCalculator;
@@ -10,9 +8,9 @@ public partial class App : Application
 {
     public static Settings Settings { get; set; }
 
-    public static bool SettingsLoaded;
+    public static bool SettingsLoaded { get; set; }
 
-    public static string SettingsFile = Path.Join(
+    public static string SettingsFile => Path.Join(
         Path.GetDirectoryName(Environment.ProcessPath),
         "settings.json"
     );
@@ -30,24 +28,22 @@ public partial class App : Application
 
     private void AppStartup(object o, StartupEventArgs e)
     {
-        Task.Run(( ) =>
+        try
         {
-            try
-            {
-                string json = File.ReadAllText(App.SettingsFile);
-                Settings = JsonSerializer.Deserialize<Settings>(json) ?? new Settings( );
-            }
-            catch
-            {
-                Settings = new Settings( );
-            }
-            SettingsLoaded = true;
-        });
+            var json = File.ReadAllText(App.SettingsFile);
+            Settings = JsonSerializer.Deserialize(json, SettingsSerializeContext.Default.Settings) ?? new Settings( );
+        }
+        catch
+        {
+            Settings = new Settings( );
+        }
+
+        SettingsLoaded = true;
     }
 
     private void AppExit(object o, ExitEventArgs e)
     {
-        string json = JsonSerializer.Serialize(Settings);
+        var json = JsonSerializer.Serialize(Settings, SettingsSerializeContext.Default.Settings);
         File.WriteAllText(SettingsFile, json);
     }
 }
