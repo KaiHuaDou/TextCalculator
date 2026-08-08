@@ -4,8 +4,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:TextCalculator"
         Title="文本计算器 @ KaiHuaDou, Special for DZX"
-        Width="640"
-        Height="480"
         Closing="WindowClosing"
         Loaded="WindowLoaded">
     <Window.Resources>

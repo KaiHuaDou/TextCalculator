@@ -12,13 +12,12 @@ public partial class MainWindow : Window
     public MainWindow( )
     {
         InitializeComponent( );
+        Height = App.Settings.Height;
+        Width = App.Settings.Width;
     }
 
     private void WindowLoaded(object o, RoutedEventArgs e)
     {
-        Height = App.Settings.Height;
-        Width = App.Settings.Width;
-
         InitGUI( );
 
         // Preheating NCalc
